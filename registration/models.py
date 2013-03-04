@@ -4,13 +4,12 @@ import random
 import re
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.db import models
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django import VERSION as DJANGO_VERSION
-from django.db.models.loading import get_model
+from django.db.models import get_model
 
 try:
     from django.utils.timezone import now as datetime_now
@@ -21,10 +20,9 @@ except ImportError:
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 def get_user_model():
-    return User
-
     if (DJANGO_VERSION[0] == 1 and DJANGO_VERSION[1] >= 5) \
             or DJANGO_VERSION[0] > 1:
+        
         return get_model(*settings.AUTH_USER_MODEL.split('.'))
     else:
         from django.contrib.auth.models import User
