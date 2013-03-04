@@ -21,6 +21,8 @@ except ImportError:
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 def get_user_model():
+    return User
+
     if (DJANGO_VERSION[0] == 1 and DJANGO_VERSION[1] >= 5) \
             or DJANGO_VERSION[0] > 1:
         return get_model(*settings.AUTH_USER_MODEL.split('.'))
