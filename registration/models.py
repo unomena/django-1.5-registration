@@ -9,7 +9,8 @@ from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django import VERSION as DJANGO_VERSION
-from django.contrib.auth import get_user_model
+
+from authentication.user.models import User
 
 try:
     from django.utils.timezone import now as datetime_now
@@ -18,8 +19,6 @@ except ImportError:
 
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
-
-User = get_user_model()
 
 def get_username_field_name():
     return getattr(User, 'USERNAME_FIELD', 'username')
@@ -179,7 +178,7 @@ class RegistrationProfile(models.Model):
     """
     ACTIVATED = u"ALREADY_ACTIVATED"
     
-    user = models.ForeignKey(get_user_model(), unique=True, verbose_name=_('user'))
+    user = models.ForeignKey(User, unique=True, verbose_name=_('user'))
     activation_key = models.CharField(_('activation key'), max_length=40)
     
     objects = RegistrationManager()
