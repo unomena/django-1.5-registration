@@ -95,7 +95,7 @@ def activate(request, backend,
 def register(request, backend, success_url=None, form_class=None,
              disallowed_url='registration_disallowed',
              template_name='registration/registration_form.html',
-             extra_context=None):
+             extra_context=None, form_kwargs=None):
     """
     Allow a new user to register an account.
 
@@ -182,7 +182,10 @@ def register(request, backend, success_url=None, form_class=None,
         form_class = backend.get_form_class(request)
 
     if request.method == 'POST':
-        form = form_class(data=request.POST, files=request.FILES)
+        if form_kwargs is None:
+            form = form_class(data=request.POST, files=request.FILES)
+        else:
+            form = form_class(data=request.POST, files=request.FILES, **form_kwargs)
         if form.is_valid():
             new_user = backend.register(request, **form.cleaned_data)
             if success_url is None:
@@ -191,7 +194,10 @@ def register(request, backend, success_url=None, form_class=None,
             else:
                 return redirect(success_url)
     else:
-        form = form_class()
+        if form_kwargs is None:
+            form = form_class()
+        else:
+            form = form_class(**form_kwargs)
     
     if extra_context is None:
         extra_context = {}
